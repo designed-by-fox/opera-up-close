@@ -101,12 +101,12 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ---------- header ---------- */
 .site-head .wrap {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px 28px; flex-wrap: wrap;
+  display: flex; align-items: center;
+  gap: 12px 22px; flex-wrap: wrap;
   padding-block: 18px;
 }
 .site-head .logo { width: 132px; }
-.nav { display: flex; gap: 6px 22px; flex-wrap: wrap; align-items: center; }
+.nav { display: flex; gap: 6px 22px; flex-wrap: wrap; align-items: center; margin-left: auto; }
 .nav a {
   color: var(--ink); text-decoration: none;
   font-variation-settings: "wdth" 112; font-size: 0.9rem; font-weight: 500;
@@ -123,8 +123,34 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .btn:hover { transform: translateY(-1px); }
 .btn.ghost { background: transparent; color: var(--cobalt); }
-.nav .btn { padding: 0.55em 1.1em; font-size: 0.85rem; color: var(--paper); }
-.nav .btn:hover { color: var(--paper); }
+.head-cta { padding: 0.55em 1.1em; font-size: 0.85rem; }
+.menu-btn {
+  display: none; place-items: center;
+  width: 44px; height: 44px; padding: 0;
+  border: 1px solid var(--rule); border-radius: 999px;
+  background: transparent; color: var(--ink); cursor: pointer;
+}
+.menu-btn .i-close { display: none; }
+.menu-btn[aria-expanded="true"] .i-open { display: none; }
+.menu-btn[aria-expanded="true"] .i-close { display: block; }
+@media (max-width: 859px) {
+  .head-cta { margin-left: auto; }
+  .menu-btn { display: inline-grid; }
+  .nav {
+    display: none; order: 3; flex-basis: 100%;
+    flex-direction: column; align-items: stretch; gap: 0;
+    margin-left: 0; border-top: 1px solid var(--rule);
+  }
+  .site-head.open .nav { display: flex; }
+  .nav a { padding-block: 14px; border-bottom: 1px solid var(--rule); font-size: 1rem; }
+}
+
+/* button pairs share one width on phones */
+@media (max-width: 560px) {
+  .room .ctas, .upnext-ctas { display: grid; grid-template-columns: 1fr; width: 100%; }
+  .room .ctas { max-width: 340px; }
+  .room .ctas .btn, .upnext-ctas .btn { width: 100%; }
+}
 
 /* ---------- hero: the dining room ---------- */
 .hero { padding-block: 8px 0; }
@@ -457,14 +483,18 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
 <header class="site-head">
   <div class="wrap">
     <a href="#top" aria-label="Opera Up Close, home"><span class="logo" role="img" aria-label="Opera Up Close"></span></a>
-    <nav class="nav" aria-label="Main">
+    <nav class="nav" id="site-nav" aria-label="Main">
       <a href="#evening">The evening</a>
       <a href="#gallery" id="nav-gallery">Past nights</a>
       <a href="#hosts">Your hosts</a>
       <a href="#private">Private events</a>
       <a href="#notes">Good to know</a>
-      <a class="btn" href="#list">Get tickets</a>
     </nav>
+    <a class="btn head-cta" href="#list">Get tickets</a>
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="i-open" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+      <svg class="i-close" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+    </button>
   </div>
 </header>
 
@@ -1287,6 +1317,19 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
     var dx = e.changedTouches[0].clientX - tx; tx = null;
     if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1));
   });
+
+  /* phone menu */
+  var head = document.querySelector('.site-head');
+  var menuBtn = document.getElementById('menu-btn');
+  function setMenu(open) {
+    head.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  menuBtn.addEventListener('click', function () { setMenu(!head.classList.contains('open')); });
+  document.getElementById('site-nav').addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && head.classList.contains('open')) { setMenu(false); menuBtn.focus(); } });
+  window.addEventListener('hashchange', function () { setMenu(false); });
 
   /* routing between the home page and the gallery */
   var home = document.getElementById('home-view'), gal = document.getElementById('gallery-view');
