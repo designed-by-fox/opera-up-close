@@ -264,6 +264,22 @@ section { padding-block: clamp(64px, 10vw, 120px) 0; }
   content: ""; position: absolute; inset: 8px; pointer-events: none;
   border: 1px solid color-mix(in srgb, var(--gilt) 45%, transparent);
 }
+.next-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.soldout {
+  font-variation-settings: "wdth" 125; font-weight: 700; font-size: 0.75rem;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gilt); border: 1.5px solid var(--gilt); border-radius: 999px;
+  padding: 5px 12px 4px; white-space: nowrap;
+}
+.next-note { font-size: 0.95rem; }
+.steps { list-style: none; counter-reset: step; margin: 6px 0 0; padding: 0; display: grid; gap: 14px; max-width: 52ch; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; color: var(--muted); }
+.steps li::before {
+  content: counter(step); font-family: var(--display); font-style: italic; font-size: 1.6rem; line-height: 1;
+  color: var(--cobalt);
+}
+.steps strong { color: var(--ink); font-weight: 600; }
+.act-desc { color: var(--muted); max-width: 60ch; }
 .prog-top {
   display: flex; justify-content: space-between; align-items: baseline; gap: 8px 24px; flex-wrap: wrap;
   padding-bottom: 20px; border-bottom: 1px solid var(--rule);
@@ -285,8 +301,7 @@ section { padding-block: clamp(64px, 10vw, 120px) 0; }
 .cell.empty .course { color: var(--muted); }
 @media (max-width: 759px) { .cell .kind { display: block; } }
 @media (min-width: 760px) {
-  .prog-cols { display: grid; grid-template-columns: 11rem 1fr 1fr; gap: 32px; padding-top: 18px; }
-  .act { grid-template-columns: 11rem 1fr 1fr; align-items: baseline; }
+  .act { grid-template-columns: 12rem 1fr; align-items: baseline; }
 }
 
 /* ---------- hosts ---------- */
@@ -338,7 +353,7 @@ figcaption { color: var(--muted); font-size: var(--step--1); }
 .box-intro h2 { font-size: var(--step-4); }
 .box-intro > p { color: var(--muted); max-width: 44ch; }
 .contact { display: grid; gap: 16px; padding-top: 12px; }
-.contact div { display: grid; gap: 2px; }
+.contact > div { display: grid; gap: 2px; }
 .contact .val { font-size: 1rem; user-select: all; }
 .copy-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .copy-btn {
@@ -445,8 +460,9 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
       <a href="#evening">The evening</a>
       <a href="#gallery" id="nav-gallery">Past nights</a>
       <a href="#hosts">Your hosts</a>
+      <a href="#private">Private events</a>
       <a href="#notes">Good to know</a>
-      <a class="btn" href="#seats">Request a seat</a>
+      <a class="btn" href="#list">Get tickets</a>
     </nav>
   </div>
 </header>
@@ -459,7 +475,7 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
         <h1>A night at the opera, served at our dining table.</h1>
         <p class="lede">Once a month, tenor John Concepción sings and Alex Hinand cooks for a small group of guests in their vintage Chicago apartment. You don't need to know a thing about opera. Just come hungry.</p>
         <div class="ctas">
-          <a class="btn" href="#seats">Request a seat</a>
+          <a class="btn" href="#list">Join the mailing list</a>
           <a class="btn ghost" href="#gallery">See past nights</a>
         </div>
       </div>
@@ -798,11 +814,15 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
         <span class="year">2026</span>
       </div>
       <div class="upnext-body">
-        <h2 id="next-h">The Bountiful Harvest</h2>
+        <div class="next-title">
+          <h2 id="next-h">The Bountiful Harvest</h2>
+          <span class="soldout">Sold out</span>
+        </div>
         <p>An evening of gratitude in music and food. The program will feature favorite songs and arias chosen for their spirit of hope and inspiration, and the menu will highlight the season's most versatile product, squash.</p>
+        <p class="next-note">Tickets for each new evening go to the mailing list first. Join to hear about the next one.</p>
         <div class="upnext-ctas">
-          <a class="btn" href="#seats" id="next-cta">Request a seat for November</a>
-          <a class="btn ghost" href="#list">Get dates by email</a>
+          <a class="btn" href="#list">Join the mailing list</a>
+          <a class="btn ghost" href="#private">Book us for a private event</a>
         </div>
       </div>
     </div>
@@ -815,7 +835,7 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
         <blockquote id="ov-h">Most people experience opera from the back of a theater. We invite you to experience it <em>from across the dinner table.</em></blockquote>
       </div>
       <div class="copy">
-        <p>In a beautifully curated vintage Chicago apartment, Opera Up Close brings together professional vocal artistry and inspired cuisine for an evening that is equal parts concert, dinner party, and memory in the making.</p>
+        <p>In a beautifully curated vintage Chicago apartment, Opera Up Close brings together professional vocal artistry and inspired cuisine for an evening that is equal parts concert, dinner party, and community building.</p>
         <p>From the first course to the final aria, every detail is crafted with intention. Alex Hinand, culinary creator and lifestyle visionary with a devoted following, designs a menu that matches the drama and elegance of the evening. John Concepción, a professional tenor with decades on the operatic stage, performs live just feet away from you, creating a unique artistic experience.</p>
         <p>There is no distance between you and the art. There is only the music, the food, and the feeling that you are exactly where you are supposed to be.</p>
       </div>
@@ -835,46 +855,33 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
     <div class="section-head">
       <span class="label">The evening</span>
       <h2 id="ev-h">How the night unfolds</h2>
-      <p>Every evening follows the shape of an opera: music and courses arrive together, act by act. The pieces and the menu change with each month's theme. Here's an example of what a programme might look like.</p>
+      <p>Every evening follows the shape of an opera, act by act. The music and the menu change with each month's theme.</p>
     </div>
     <div class="programme">
-      <div class="prog-top">
-        <h3>Sample programme: <span>Puccini &amp; Friends</span></h3>
-        <p>Example only. Each month brings its own theme and menu.</p>
-      </div>
-      <div class="prog-cols" aria-hidden="true">
-        <span></span><span class="label">On the stage</span><span class="label">At the table</span>
-      </div>
       <ol class="acts">
         <li class="act">
           <div class="act-name">Overture<small class="label">Arrival</small></div>
-          <div class="cell empty"><span class="label kind">On the stage</span><span class="course">Doors open, a drink in hand, introductions all around</span></div>
-          <div class="cell"><span class="label kind">At the table</span><span class="course">Aperitivo and small bites in the living room</span></div>
+          <p class="act-desc">Guests arrive and greet each other. Specialty non-alcoholic drinks and appetizers are served.</p>
         </li>
         <li class="act">
-          <div class="act-name">Act I</div>
-          <div class="cell"><span class="label kind">On the stage</span><span class="piece">Una furtiva lagrima</span><span class="credit">Donizetti · L'elisir d'amore</span></div>
-          <div class="cell"><span class="label kind">At the table</span><span class="course">First course</span></div>
+          <div class="act-name">Entr'acte<small class="label">Welcome</small></div>
+          <p class="act-desc">A few words from the hosts about the evening and what to expect.</p>
         </li>
         <li class="act">
-          <div class="act-name">Entr'acte</div>
-          <div class="cell"><span class="label kind">On the stage</span><span class="piece">The story behind the next aria</span><span class="credit">A few words from John</span></div>
-          <div class="cell empty"><span class="label kind">At the table</span><span class="course">Glasses refilled</span></div>
+          <div class="act-name">Act I<small class="label">The music</small></div>
+          <p class="act-desc">Arias and songs on the evening's theme, sung by tenor John Concepción and accompanied by pianist Paul Hamilton.</p>
         </li>
         <li class="act">
-          <div class="act-name">Act II</div>
-          <div class="cell"><span class="label kind">On the stage</span><span class="piece">Che gelida manina</span><span class="credit">Puccini · La bohème</span></div>
-          <div class="cell"><span class="label kind">At the table</span><span class="course">Main course</span></div>
+          <div class="act-name">Act II<small class="label">Dinner</small></div>
+          <p class="act-desc">Everyone moves to the dining room for dinner and conversation.</p>
         </li>
         <li class="act">
-          <div class="act-name">Act III</div>
-          <div class="cell"><span class="label kind">On the stage</span><span class="piece">E lucevan le stelle</span><span class="credit">Puccini · Tosca</span></div>
-          <div class="cell"><span class="label kind">At the table</span><span class="course">Dessert and coffee</span></div>
+          <div class="act-name">Act III<small class="label">Dessert</small></div>
+          <p class="act-desc">Guests return to the living room for coffee and dessert while John and Paul perform more arias and songs on the evening's theme.</p>
         </li>
         <li class="act">
-          <div class="act-name">Encore<small class="label">If you ask nicely</small></div>
-          <div class="cell"><span class="label kind">On the stage</span><span class="piece">Nessun dorma</span><span class="credit">Puccini · Turandot</span></div>
-          <div class="cell empty"><span class="label kind">At the table</span><span class="course">Lingering encouraged</span></div>
+          <div class="act-name">Encore<small class="label">To take home</small></div>
+          <p class="act-desc">Each guest leaves with a goodie bag of hand-crafted cookies, made by Alex.</p>
         </li>
       </ol>
     </div>
@@ -935,63 +942,57 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
       </details>
       <details>
         <summary>Can you work with dietary needs?</summary>
-        <p>Let us know about allergies or restrictions when you request a seat, and Alex will plan around them.</p>
+        <p>Email us about allergies or restrictions once you have your ticket, and Alex will plan around them.</p>
       </details>
       <details>
         <summary>Where is it?</summary>
-        <p>In John and Alex's apartment in the Ravenswood neighborhood of Chicago. The address and arrival details come with your confirmation.</p>
+        <p>In John and Alex's apartment in the Ravenswood neighborhood of Chicago. The address and arrival details come with your ticket.</p>
       </details>
       <details>
         <summary>How do tickets work?</summary>
-        <p>Seats are limited and go by request. Send us your preferred month and party size, and we'll follow up with availability and ticket details.</p>
+        <p>Tickets are sold through Eventbrite, usually about two weeks before each evening. Each one is announced to our mailing list first, and seats tend to sell out within hours of that email. Buying a ticket is the only way to hold a seat, so joining the list is the best way to get one.</p>
       </details>
     </div>
   </section>
 
-  <section id="seats" class="wrap" aria-labelledby="seats-h">
+  <section id="private" class="wrap" aria-labelledby="private-h">
     <div class="box">
       <div class="box-intro">
-        <span class="label">Box office</span>
-        <h2 id="seats-h">Save us a seat</h2>
-        <p>Tell us a little about your party and when you'd like to come. We'll be in touch with dates and details.</p>
+        <span class="label">Private events</span>
+        <h2 id="private-h">Bring Opera Up Close to your home</h2>
+        <p>Hire John and Alex to cook and perform at your own gathering. Packages are available, and everything is negotiable.</p>
         <div class="contact">
           <div>
             <span class="label">Email</span>
             <div class="copy-row"><span class="val" id="email-val">jctenor@me.com</span><button type="button" class="copy-btn" id="copy-email">Copy</button></div>
           </div>
           <div><span class="label">Phone</span><span class="val">(847) 902-0389</span></div>
-          <div><span class="label">Location</span><span class="val">Ravenswood neighborhood of Chicago</span></div>
         </div>
       </div>
-      <form id="seat-form" novalidate>
+      <form id="hire-form" novalidate>
         <div class="row two">
           <div class="field"><label for="f-first">First name</label><input id="f-first" name="first" autocomplete="given-name" required></div>
           <div class="field"><label for="f-last">Last name</label><input id="f-last" name="last" autocomplete="family-name" required></div>
         </div>
-        <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
         <div class="row two">
-          <div class="field">
-            <label for="f-party">How many guests</label>
-            <select id="f-party" name="party"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5 or more</option></select>
-          </div>
-          <div class="field">
-            <label for="f-month">Preferred month</label>
-            <select id="f-month" name="month">
-              <option selected>November 2026: The Bountiful Harvest</option><option>Whenever there's room</option><option>December 2026</option><option>January 2027</option><option>February 2027</option><option>March 2027</option>
-            </select>
-          </div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="f-phone">Phone <span class="hint">(optional)</span></label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+        </div>
+        <div class="row two">
+          <div class="field"><label for="f-date">Date or timeframe</label><input id="f-date" name="date" placeholder="e.g. a Saturday in March"></div>
+          <div class="field"><label for="f-guests">Number of guests</label><input id="f-guests" name="guests" inputmode="numeric" placeholder="e.g. 12"></div>
         </div>
         <div class="field">
-          <label for="f-notes">Anything we should know? <span class="hint">(allergies, occasions, questions)</span></label>
+          <label for="f-notes">Tell us about your event <span class="hint">(occasion, location, what you have in mind)</span></label>
           <textarea id="f-notes" name="notes"></textarea>
         </div>
         <div class="form-foot">
-          <button class="btn" type="submit">Request seats</button>
+          <button class="btn" type="submit">Send inquiry</button>
           <small id="form-msg" role="status"></small>
         </div>
         <div class="notice" id="thanks" hidden>
           <strong>Thank you, <span id="thanks-name"></span>.</strong>
-          <p>This preview of the new site doesn't send requests yet. Until it goes live, email your request to jctenor@me.com and John and Alex will reply with dates.</p>
+          <p>This preview of the new site doesn't send inquiries yet. Until it goes live, email jctenor@me.com and John and Alex will be in touch.</p>
         </div>
       </form>
     </div>
@@ -1008,16 +1009,20 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
   </div>
   <div class="wrap" id="themes"></div>
   <div class="wrap" style="padding-block: 56px 0;">
-    <a class="btn" href="#seats">Request a seat at the next one</a>
+    <a class="btn" href="#list">Join the list for the next one</a>
   </div>
 </main>
 
 <section id="list" class="wrap" aria-labelledby="list-h">
   <div class="mailing">
     <div class="mailing-copy">
-      <span class="label">Mailing list</span>
-      <h2 id="list-h">Hear about the next night first</h2>
-      <p>Seats are limited. Add your email to get each month's theme and dates as soon as they're announced.</p>
+      <span class="label">Tickets</span>
+      <h2 id="list-h">How to get a seat</h2>
+      <ol class="steps">
+        <li><span><strong>Join the mailing list.</strong> Every new evening is announced by email first.</span></li>
+        <li><span><strong>Watch for the email.</strong> Tickets go on sale through Eventbrite about two weeks before each evening.</span></li>
+        <li><span><strong>Buy your ticket quickly.</strong> Seats usually sell out within hours, and a ticket is the only way to hold one.</span></li>
+      </ol>
     </div>
     <form id="list-form" class="mailing-form" novalidate>
       <div class="field">
@@ -1030,7 +1035,7 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
       <small id="list-msg" role="status"></small>
       <div class="notice" id="list-thanks" hidden>
         <strong>You're on the list.</strong>
-        <p>This preview of the new site doesn't save addresses yet. Once it's live, this form will connect to John and Alex's mailing list.</p>
+        <p>This preview of the new site doesn't save addresses yet. Once it's live, this form will add you to John and Alex's mailing list.</p>
       </div>
     </form>
   </div>
@@ -1299,7 +1304,7 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
     document.getElementById('list-thanks').hidden = false;
   });
 
-  var form = document.getElementById('seat-form');
+  var form = document.getElementById('hire-form');
   var msg = document.getElementById('form-msg');
   form.addEventListener('submit', function (e) {
     e.preventDefault();
