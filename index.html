@@ -250,6 +250,11 @@ section { padding-block: clamp(64px, 10vw, 120px) 0; }
 .mailing-copy p { color: var(--muted); max-width: 48ch; }
 .mailing-form { gap: 10px; }
 .mailing-form small { color: var(--muted); }
+.choice { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.choice legend { font-size: 0.85rem; font-weight: 600; font-variation-settings: "wdth" 108; padding: 0; margin-bottom: 6px; }
+.choice label { display: flex; align-items: center; gap: 10px; color: var(--muted); cursor: pointer; }
+.choice input { width: 18px; height: 18px; margin: 0; accent-color: var(--cobalt); flex: none; }
+.honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .inline { display: flex; gap: 10px; flex-wrap: wrap; }
 .inline input { flex: 1 1 220px; min-width: 0; }
 
@@ -1012,12 +1017,12 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
         <div class="contact">
           <div>
             <span class="label">Email</span>
-            <div class="copy-row"><span class="val" id="email-val">jctenor@me.com</span><button type="button" class="copy-btn" id="copy-email">Copy</button></div>
+            <div class="copy-row"><span class="val" id="email-val">operaupclose@icloud.com</span><button type="button" class="copy-btn" id="copy-email">Copy</button></div>
           </div>
-          <div><span class="label">Phone</span><span class="val">(847) 902-0389</span></div>
         </div>
       </div>
       <form id="hire-form" novalidate>
+        <input type="text" name="_honey" id="f-honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="honey">
         <div class="row two">
           <div class="field"><label for="f-first">First name</label><input id="f-first" name="first" autocomplete="given-name" required></div>
           <div class="field"><label for="f-last">Last name</label><input id="f-last" name="last" autocomplete="family-name" required></div>
@@ -1040,7 +1045,11 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
         </div>
         <div class="notice" id="thanks" hidden>
           <strong>Thank you, <span id="thanks-name"></span>.</strong>
-          <p>This preview of the new site doesn't send inquiries yet. Until it goes live, email jctenor@me.com and John and Alex will be in touch.</p>
+          <p>Your inquiry is on its way to John and Alex, and they'll be in touch soon.</p>
+        </div>
+        <div class="notice" id="hire-fallback" hidden>
+          <strong>That didn't go through.</strong>
+          <p>Please email your inquiry to <a href="mailto:operaupclose@icloud.com">operaupclose@icloud.com</a> and John and Alex will be in touch.</p>
         </div>
       </form>
     </div>
@@ -1073,17 +1082,26 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
       </ol>
     </div>
     <form id="list-form" class="mailing-form" novalidate>
-      <div class="field">
-        <label for="l-email">Email address</label>
-        <div class="inline">
-          <input id="l-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-          <button class="btn" type="submit">Join the list</button>
-        </div>
+      <div class="row two">
+        <div class="field"><label for="l-first">First name</label><input id="l-first" name="first" autocomplete="given-name"></div>
+        <div class="field"><label for="l-email">Email address</label><input id="l-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
       </div>
-      <small id="list-msg" role="status"></small>
+      <fieldset class="choice">
+        <legend>What would you like to receive?</legend>
+        <label for="l-pref-both"><input type="radio" name="pref" id="l-pref-both" value="Both"> Event announcements and the newsletter</label>
+        <label for="l-pref-events"><input type="radio" name="pref" id="l-pref-events" value="Just Event Announcements"> Just event announcements</label>
+      </fieldset>
+      <div class="form-foot">
+        <button class="btn" type="submit" id="l-submit">Join the list</button>
+        <small id="list-msg" role="status"></small>
+      </div>
       <div class="notice" id="list-thanks" hidden>
         <strong>You're on the list.</strong>
-        <p>This preview of the new site doesn't save addresses yet. Once it's live, this form will add you to John and Alex's mailing list.</p>
+        <p>Watch your inbox for the next announcement.</p>
+      </div>
+      <div class="notice" id="list-fallback" hidden>
+        <strong>One more step.</strong>
+        <p>We couldn't send that from here. <a id="list-link" href="https://docs.google.com/forms/d/e/1FAIpQLSeNydBGdBS4iA4X3grtlIGYrg_obBxpT0Wahkd2zspwtDiwHA/viewform" target="_blank" rel="noopener">Finish signing up on our Google Form</a>. Your details are filled in for you.</p>
       </div>
     </form>
   </div>
@@ -1361,11 +1379,31 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
   });
   var lform = document.getElementById('list-form');
   var lmsg = document.getElementById('list-msg');
+  var GFORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeNydBGdBS4iA4X3grtlIGYrg_obBxpT0Wahkd2zspwtDiwHA/';
+  var lsubmit = document.getElementById('l-submit');
   lform.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(lform.email.value.trim())) { lmsg.textContent = 'That email looks incomplete. Check it and try again.'; lform.email.focus(); return; }
+    var email = lform.email.value.trim();
+    if (!/^\S+@\S+\.\S+$/.test(email)) { lmsg.textContent = 'That email looks incomplete. Check it and try again.'; lform.email.focus(); return; }
     lmsg.textContent = '';
-    document.getElementById('list-thanks').hidden = false;
+    document.getElementById('list-thanks').hidden = true;
+    document.getElementById('list-fallback').hidden = true;
+    var params = new URLSearchParams();
+    params.append('entry.1881787879', lform.first.value.trim());
+    params.append('entry.1602018433', email);
+    var pref = lform.querySelector('input[name="pref"]:checked');
+    if (pref) params.append('entry.336707123', pref.value);
+    lsubmit.disabled = true; lsubmit.textContent = 'Joining…';
+    var finish = function () { lsubmit.disabled = false; lsubmit.textContent = 'Join the list'; };
+    var fallback = function () {
+      document.getElementById('list-link').href = GFORM + 'viewform?usp=pp_url&' + params.toString();
+      document.getElementById('list-fallback').hidden = false;
+      finish();
+    };
+    try {
+      fetch(GFORM + 'formResponse', { method: 'POST', mode: 'no-cors', body: params })
+        .then(function () { document.getElementById('list-thanks').hidden = false; lform.reset(); finish(); }, fallback);
+    } catch (err) { fallback(); }
   });
 
   var form = document.getElementById('hire-form');
@@ -1376,8 +1414,36 @@ footer { padding-block: clamp(72px, 10vw, 120px) 48px; }
     if (!first || !form.last.value.trim()) { msg.textContent = 'Please add your first and last name.'; form.first.focus(); return; }
     if (!/^\S+@\S+\.\S+$/.test(email)) { msg.textContent = 'That email looks incomplete. Check it and try again.'; form.email.focus(); return; }
     msg.textContent = '';
-    document.getElementById('thanks-name').textContent = first;
-    document.getElementById('thanks').hidden = false;
+    if (form._honey.value) return;
+    var thanks = document.getElementById('thanks'), fb = document.getElementById('hire-fallback');
+    thanks.hidden = true; fb.hidden = true;
+    var submit = form.querySelector('button[type="submit"]');
+    submit.disabled = true; submit.textContent = 'Sending…';
+    var done = function () { submit.disabled = false; submit.textContent = 'Send inquiry'; };
+    var fail = function () { fb.hidden = false; done(); };
+    var name = first + ' ' + form.last.value.trim();
+    var payload = {
+      name: name, email: email,
+      phone: form.phone.value.trim(),
+      date: form.date.value.trim(),
+      guests: form.guests.value.trim(),
+      details: form.notes.value.trim(),
+      _subject: 'Private event inquiry from ' + name,
+      _replyto: email,
+      _template: 'table'
+    };
+    try {
+      fetch('https://formsubmit.co/ajax/operaupclose@icloud.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        if (j && (j.success === true || j.success === 'true')) {
+          document.getElementById('thanks-name').textContent = first;
+          thanks.hidden = false; form.reset(); done();
+        } else { fail(); }
+      }, fail);
+    } catch (err) { fail(); }
   });
 })();
 </script>
